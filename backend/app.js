@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const db = require('./config/db');
 const authRoutes = require('./routes/authroutes.js');
 const campusRoutes = require('./routes/campusroutes.js');
@@ -12,6 +13,11 @@ const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Enable CORS for frontend requests
+app.use(cors({
+    origin: 'https://rentsphere-frontend-1g61.onrender.com'
+}));
 
 // Middleware to parse incoming JSON request bodies
 app.use(express.json());
