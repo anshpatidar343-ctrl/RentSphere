@@ -11,7 +11,7 @@ const documentRoutes = require('./routes/documentroutes.js');
 const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 5000;
 
 // Middleware to parse incoming JSON request bodies
 app.use(express.json());
@@ -34,6 +34,6 @@ app.use('/api/rent', authMiddleware, rentRoutes);
 app.use('/api/payments', authMiddleware, paymentRoutes);
 app.use('/api/documents', authMiddleware, documentRoutes);
 
-app.listen(PORT, () => {
-    console.log(`RentSphere server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
 });
