@@ -1,6 +1,8 @@
 // Centralized API fetch helper that attaches JWT authentication headers
 // and gracefully handles expired / invalid sessions
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export async function apiFetch(url, options = {}) {
   const token = localStorage.getItem('token');
   const headers = { ...options.headers };
@@ -22,13 +24,17 @@ export async function apiFetch(url, options = {}) {
   };
 
   try {
-    const response = await fetch(url, config);
+    const response = await fetch(`${API_BASE_URL}${url}`, config);
 
     if (response.status === 401) {
       // Clear invalid credentials and redirect to login
       localStorage.removeItem('token');
       localStorage.removeItem('owner');
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
+
+      if (
+        window.location.pathname !== '/login' &&
+        window.location.pathname !== '/signup'
+      ) {
         window.location.href = '/login';
       }
     }
@@ -41,20 +47,25 @@ export async function apiFetch(url, options = {}) {
 }
 
 export const api = {
-  get: (url, options = {}) => apiFetch(url, { ...options, method: 'GET' }),
+  get: (url, options = {}) =>
+    apiFetch(url, { ...options, method: 'GET' }),
+
   post: (url, body, options = {}) =>
     apiFetch(url, {
       ...options,
       method: 'POST',
       body: body instanceof FormData ? body : JSON.stringify(body)
     }),
+
   put: (url, body, options = {}) =>
     apiFetch(url, {
       ...options,
       method: 'PUT',
       body: body instanceof FormData ? body : JSON.stringify(body)
     }),
-  delete: (url, options = {}) => apiFetch(url, { ...options, method: 'DELETE' })
+
+  delete: (url, options = {}) =>
+    apiFetch(url, { ...options, method: 'DELETE' })
 };
 
 export default api;
