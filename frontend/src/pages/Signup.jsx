@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 import '../styles/auth.css';
 
 function Signup() {
@@ -20,11 +21,7 @@ function Signup() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+      const response = await api.post('/api/auth/signup', formData);
 
       const data = await response.json();
 
